@@ -2,6 +2,7 @@ from django.db import models
 from django.utils import timezone
 
 class UserDetailsTable(models.Model):
+   
     user_id = models.CharField(max_length=200, unique=True, editable=False)
     name = models.CharField(max_length=250, null=False, blank=False)
     email = models.EmailField(null=False, blank=False)
@@ -29,3 +30,47 @@ class UserDetailsTable(models.Model):
             self.user_id = f"{year}{new_id_num:03d}"
     
         super().save(*args, **kwargs)
+
+from django.db import models
+
+class TurfDetails(models.Model):
+    TURF_TYPE_CHOICES = [
+        ('indoor', 'Indoor'),
+        ('outdoor', 'Outdoor'),
+    ]
+
+    SURFACE_TYPE_CHOICES = [
+        ('artificial', 'Artificial Grass'),
+        ('natural', 'Natural Grass'),
+        ('concrete', 'Concrete'),
+    ]
+
+    class Status(models.IntegerChoices):
+        VERIFIED = 1, 'Verified'
+        BLOCKED = 2, 'Blocked'
+        PENDING = 3, 'Pending'
+
+    turf_name = models.CharField(max_length=100)
+    turf_address = models.TextField()
+    turf_city = models.CharField(max_length=50)
+    turf_state = models.CharField(max_length=50)
+    turf_zip_code = models.CharField(max_length=10)
+    turf_latitude = models.DecimalField(max_digits=9, decimal_places=6)
+    turf_longitude = models.DecimalField(max_digits=9, decimal_places=6)
+    turf_type = models.CharField(max_length=10, choices=TURF_TYPE_CHOICES)
+    surface_type = models.CharField(max_length=20, choices=SURFACE_TYPE_CHOICES)
+    size = models.CharField(max_length=20, help_text="E.g., 5-a-side, 7-a-side, 11-a-side")
+    capacity = models.PositiveIntegerField(help_text="Maximum players allowed")
+    status = models.IntegerField(choices=Status.choices, default=Status.PENDING)    
+    opening_time = models.TimeField( blank=True, null=True)
+    closing_time = models.TimeField( blank=True, null=True)
+    closed_days = models.CharField(max_length=50, help_text="Days turf is closed, e.g., Sunday") 
+    hourly_rate = models.DecimalField(max_digits=6, decimal_places=2)
+    peak_hour_rate = models.DecimalField(max_digits=6, decimal_places=2, blank=True, null=True)
+    discount = models.DecimalField(max_digits=5, decimal_places=2, blank=True, null=True)
+    owner_name = models.CharField(max_length=200)
+    turf_contact_phone = models.CharField(max_length=10)
+    turf_contact_email = models.EmailField()
+
+    def __str__(self):
+        return self.turf_name  # Updated __str__ method to use turf_name

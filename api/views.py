@@ -1,8 +1,10 @@
 from django.shortcuts import render
 from django.views.decorators.csrf import csrf_exempt
 from .serializers import UserSreializer
+from .serializers import TurfSerializer
 from django.http.response import JsonResponse
 from .models import UserDetailsTable
+from .models import TurfDetails
 from django.contrib.auth import login
 from django.contrib.auth.hashers import check_password
 from django.contrib.auth.hashers import make_password
@@ -44,3 +46,18 @@ def login(request):
         except Exception as e:        
             return JsonResponse({"error": str(e)}, status=500, safe=False)  
     return JsonResponse({"error": "Invalid request method"}, status=405, safe=False)
+
+@csrf_exempt
+def turf(request):
+    if request.method == 'POST':
+        data = json.loads(request.body)
+        serializer = TurfSerializer(data=data)
+        if serializer.is_valid():
+            serializer.save()
+            return JsonResponse({"message": "Turf Data added successfully"}, safe=False)
+        else:
+            return JsonResponse(serializer.errors, safe=False)
+    if request.method == 'GET':
+        item= TurfDetails.objects.all()
+        serializer = TurfSerializer(item,many=True)
+        return JsonResponse(serializer.data,safe=False)
