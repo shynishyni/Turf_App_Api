@@ -8,6 +8,6 @@ class UserSreializer(serializers.ModelSerializer):
         fields ='__all__'
     
 class TurfSerializer(serializers.ModelSerializer):
-    class Meat:
+    class Meta:
         model = TurfDetails
         fields ='__all__'
