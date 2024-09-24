@@ -3,7 +3,6 @@ from django.views.decorators.csrf import csrf_exempt
 from rest_framework.parsers import JSONParser
 from .serializers import UserSreializer
 from .serializers import TurfSerializer
-from .serializers import TurfImageSerializer
 from django.http.response import JsonResponse
 from .models import UserDetailsTable
 from .models import TurfDetails
@@ -68,61 +67,3 @@ def turf(request):
         item= TurfDetails.objects.all()
         serializer = TurfSerializer(item,many=True)
         return JsonResponse(serializer.data,safe=False)
-# @csrf_exempt
-# def update_turf(request,turf_name=""):
-#     if request.method == 'PUT':
-#         # data = JSONParser().parse(request)
-#         try:
-#             item = TurfDetails.objects.get(turf_name=turf_name)
-#         except TurfDetails.DoesNotExist:
-#             return JsonResponse({"message": "Item not found"}, status=404)
-#         data = request.POST.dict()
-#         image_files = request.FILES.getlist('image')
-#         print("Received data:", data)
-#         print("Received files:", request.FILES)
-#         serializer = TurfSerializer(item, data = data, partial=True)
-#         if serializer.is_valid():
-#             serializer.save()
-#             print("Turf details updated:", serializer.data)
-#             for image in image_files:
-#                 turf_image = TurfImage(turf=item, image=image)
-#                 turf_image.save()
-#             return JsonResponse({"message": "Updated Successfully"}, safe=False)
-#         return JsonResponse({"message": "Failed to Update", "errors": serializer.errors}, safe=False)
-    
-@csrf_exempt
-def update_turf(request, turf_name=""):
-    if request.method == 'PUT':
-        try:
-            # Find the item by turf_name
-            item = TurfDetails.objects.get(turf_name=turf_name)
-        except TurfDetails.DoesNotExist:
-            return JsonResponse({"message": "Item not found"}, status=404)
-
-        # For multipart form-data, use request.POST and request.FILES
-        data = request.POST.dict()  # Non-file data
-        image_files = request.FILES.getlist('image')  # File data
-
-        # DEBUG: Confirm the received data and files
-        print("Received data:", data)
-        print("Received files:", request.FILES)
-
-        # Update the TurfDetails instance with partial data
-        serializer = TurfSerializer(item, data=data, partial=True)
-
-        if serializer.is_valid():
-            # Save the updated data in TurfDetails
-            serializer.save()
-
-            # Handle image uploads and associate them with the turf
-            for image in image_files:
-                # Create a new TurfImage entry for each uploaded image
-                turf_image = TurfImage(turf=item, image=image)
-                turf_image.save()
-
-            return JsonResponse({"message": "Updated Successfully"}, status=status.HTTP_200_OK)
-        else:
-            print("Serializer errors:", serializer.errors)
-            return JsonResponse({"message": "Failed to Update", "errors": serializer.errors}, safe=False)
-
-    return JsonResponse({"message": "Invalid request method"}, status=status.HTTP_400_BAD_REQUEST)

@@ -25,7 +25,6 @@ urlpatterns = [
     path('user/',views.user,name='adduser'),
     path('login/',views.login,name='login'),
     path('turf/',views.turf,name='turf'),
-    path('update_turf/<str:turf_name>/',views.update_turf,name='update_turf')
 ]
 if settings.DEBUG:
     urlpatterns += static(settings.MEDIA_URL, document_root=settings.MEDIA_ROOT)
