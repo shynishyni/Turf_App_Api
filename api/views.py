@@ -52,16 +52,13 @@ def login(request):
 @csrf_exempt
 def turf(request):
     if request.method == 'POST':
-        if 'image' in request.FILES:
-            data = json.loads(request.body)
-            serializer = TurfSerializer(data=data)
-            if serializer.is_valid():
-                turf_instance = serializer.save()
-                for image in request.FILES.getlist('image'):
-                    TurfImage.objects.create(turf=turf_instance, image=image)
-                return JsonResponse({"message": "Turf Data added successfully"}, safe=False)
-            else:
-                return JsonResponse(serializer.errors, safe=False)
+        data = json.loads(request.body)
+        serializer = TurfSerializer(data=data)
+        if serializer.is_valid():
+            serializer.save()
+            return JsonResponse({"message": "Turf Data added successfully"}, safe=False)
+        else:
+            return JsonResponse(serializer.errors, safe=False)
     if request.method == 'GET':
         item= TurfDetails.objects.all()
         serializer = TurfSerializer(item,many=True)
