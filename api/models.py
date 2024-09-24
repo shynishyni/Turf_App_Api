@@ -75,9 +75,9 @@ class TurfDetails(models.Model):
     def __str__(self):
         return self.turf_name  # Updated __str__ method to use turf_name
 
-class TurfImage(models.Model):
-    turf = models.ForeignKey(TurfDetails, related_name='images', on_delete=models.CASCADE)
-    image = models.ImageField(upload_to='turf_images/')
+# class TurfImage(models.Model):
+#     turf = models.ForeignKey(TurfDetails, related_name='images', on_delete=models.CASCADE)
+#     image = models.ImageField(upload_to='turf_images/')
 
-    def __str__(self):
-        return f"Image for {self.turf.turf_name}"
+#     def __str__(self):
+#         return f"Image for {self.turf.turf_name}"

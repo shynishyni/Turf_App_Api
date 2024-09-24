@@ -6,7 +6,6 @@ from .serializers import TurfSerializer
 from django.http.response import JsonResponse
 from .models import UserDetailsTable
 from .models import TurfDetails
-from .models import TurfImage
 from django.contrib.auth import login
 from rest_framework import status
 from django.contrib.auth.hashers import check_password
