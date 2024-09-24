@@ -1,7 +1,9 @@
 from django.shortcuts import render
 from django.views.decorators.csrf import csrf_exempt
+from rest_framework.parsers import JSONParser
 from .serializers import UserSreializer
 from .serializers import TurfSerializer
+from .serializers import TurfImageSerializer
 from django.http.response import JsonResponse
 from .models import UserDetailsTable
 from .models import TurfDetails
@@ -65,3 +67,15 @@ def turf(request):
         item= TurfDetails.objects.all()
         serializer = TurfSerializer(item,many=True)
         return JsonResponse(serializer.data,safe=False)
+@csrf_exempt
+def update_turf(request,turf_name=""):
+    data = JSONParser().parse(request)
+    try:
+        item = TurfDetails.objects.get(turf_name=turf_name)
+        serializer = TurfSerializer(item, data = data)
+        if serializer.is_valid():
+            serializer.save()
+            return JsonResponse({"message": "Updated Successfully"}, safe=False)
+        return JsonResponse({"message": "Failed to Update"}, safe=False)
+    except TurfDetails.DoesNotExist:
+         return JsonResponse({"message": "Item not found"}, status=404)
