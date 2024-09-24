@@ -77,9 +77,12 @@ def update_turf(request,turf_name=""):
             return JsonResponse({"message": "Item not found"}, status=404)
         data = request.POST.dict()
         image_files = request.FILES.getlist('image')
+        print("Received data:", data)
+        print("Received files:", request.FILES)
         serializer = TurfSerializer(item, data = data, partial=True)
         if serializer.is_valid():
             serializer.save()
+            print("Turf details updated:", serializer.data)
             for image in image_files:
                 turf_image = TurfImage(turf=item, image=image)
                 turf_image.save()
