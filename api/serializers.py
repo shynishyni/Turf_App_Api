@@ -11,8 +11,7 @@ class UserSreializer(serializers.ModelSerializer):
 class TurfImageSerializer(serializers.ModelSerializer):
     class Meta:
         model = TurfImage
-        fields = ['image']
-
+        fields = ['id', 'turf', 'image']
     
 class TurfSerializer(serializers.ModelSerializer):
     images = TurfImageSerializer(many=True, required=False)

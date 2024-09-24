@@ -69,13 +69,20 @@ def turf(request):
         return JsonResponse(serializer.data,safe=False)
 @csrf_exempt
 def update_turf(request,turf_name=""):
-    data = JSONParser().parse(request)
-    try:
-        item = TurfDetails.objects.get(turf_name=turf_name)
+    if request.method == 'PUT':
+        # data = JSONParser().parse(request)
+        try:
+            item = TurfDetails.objects.get(turf_name=turf_name)
+        except TurfDetails.DoesNotExist:
+            return JsonResponse({"message": "Item not found"}, status=404)
+        data = request.POST.dict()
+        image_files = request.FILES.getlist('image')
         serializer = TurfSerializer(item, data = data, partial=True)
         if serializer.is_valid():
             serializer.save()
+            for image in image_files:
+                turf_image = TurfImage(turf=item, image=image)
+                turf_image.save()
             return JsonResponse({"message": "Updated Successfully"}, safe=False)
-        return JsonResponse({"message": "Failed to Update"}, safe=False)
-    except TurfDetails.DoesNotExist:
-         return JsonResponse({"message": "Item not found"}, status=404)
+        return JsonResponse({"message": "Failed to Update", "errors": serializer.errors}, safe=False)
+    
