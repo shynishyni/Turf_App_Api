@@ -7,8 +7,15 @@ class UserSreializer(serializers.ModelSerializer):
     class Meta:
         model = UserDetailsTable
         fields ='__all__'
+
+class TurfImageSerializer(serializers.ModelSerializer):
+    class Meta:
+        model = TurfImage
+        fields = ['image']
+
     
 class TurfSerializer(serializers.ModelSerializer):
+    images = TurfImageSerializer(many=True, required=False)
     class Meta:
         model = TurfDetails
         fields = [
@@ -19,8 +26,3 @@ class TurfSerializer(serializers.ModelSerializer):
             'discount', 'owner_name', 'turf_contact_phone', 'turf_contact_email',
             'images'
         ]
-
-class TurfImageSerializer(serializers.ModelSerializer):
-    class Meta:
-        model = TurfImage
-        fields = ['image']

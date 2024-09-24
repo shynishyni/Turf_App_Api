@@ -5,6 +5,7 @@ from .serializers import TurfSerializer
 from django.http.response import JsonResponse
 from .models import UserDetailsTable
 from .models import TurfDetails
+from .models import TurfImage
 from django.contrib.auth import login
 from django.contrib.auth.hashers import check_password
 from django.contrib.auth.hashers import make_password
@@ -50,13 +51,16 @@ def login(request):
 @csrf_exempt
 def turf(request):
     if request.method == 'POST':
-        data = json.loads(request.body)
-        serializer = TurfSerializer(data=data)
-        if serializer.is_valid():
-            serializer.save()
-            return JsonResponse({"message": "Turf Data added successfully"}, safe=False)
-        else:
-            return JsonResponse(serializer.errors, safe=False)
+        if 'image' in request.FILES:
+            data = json.loads(request.body)
+            serializer = TurfSerializer(data=data)
+            if serializer.is_valid():
+                turf_instance = serializer.save()
+                for image in request.FILES.getlist('image'):
+                    TurfImage.objects.create(turf=turf_instance, image=image)
+                return JsonResponse({"message": "Turf Data added successfully"}, safe=False)
+            else:
+                return JsonResponse(serializer.errors, safe=False)
     if request.method == 'GET':
         item= TurfDetails.objects.all()
         serializer = TurfSerializer(item,many=True)
