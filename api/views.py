@@ -72,7 +72,7 @@ def update_turf(request,turf_name=""):
     data = JSONParser().parse(request)
     try:
         item = TurfDetails.objects.get(turf_name=turf_name)
-        serializer = TurfSerializer(item, data = data)
+        serializer = TurfSerializer(item, data = data, partial=True)
         if serializer.is_valid():
             serializer.save()
             return JsonResponse({"message": "Updated Successfully"}, safe=False)
