@@ -25,6 +25,7 @@ urlpatterns = [
     path('user/',views.user,name='adduser'),
     path('login/',views.login,name='login'),
     path('turf/',views.turf,name='turf'),
+    path('getturf/<int:id>/',views.getturf,name='getturf')
 ]
 if settings.DEBUG:
     urlpatterns += static(settings.MEDIA_URL, document_root=settings.MEDIA_ROOT)
