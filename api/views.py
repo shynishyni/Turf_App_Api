@@ -69,17 +69,16 @@ def turf(request):
         return JsonResponse(serializer.data,safe=False)
 
 @csrf_exempt
-def getturf(request,id=0):
+def getturf(request, id=0):
     if request.method == "GET":
-        if id==0:
-            return JsonResponse({"message":"No such turf :("},status=404)
+        if id == 0:
+            return JsonResponse({"message": "No such turf :("}, status=404)
         else:
             try:
-                turf=TurfDetails.objects.filter(id__icontains=id)
-                if turf.exists():
-                    serilizer=TurfSerializer(turf)
-                    return JsonResponse(serilizer.data,safe=False)
-                else:
-                    return JsonResponse({"message":"No such turf :("},status=404)
+                turf = TurfDetails.objects.get(id=id)
+                serializer = TurfSerializer(turf)
+                return JsonResponse(serializer.data, safe=False)
             except TurfDetails.DoesNotExist:
-                return JsonResponse({"message":"No such turf :("},status=404)
+                return JsonResponse({"message": "No such turf :("}, status=404)
+            except Exception as e:
+                return JsonResponse({"message": str(e)}, status=500)
