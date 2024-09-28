@@ -1,5 +1,6 @@
 from django.shortcuts import render
 from django.views.decorators.csrf import csrf_exempt
+from rest_framework.parsers import MultiPartParser
 from rest_framework.parsers import JSONParser
 from .serializers import UserSreializer
 from .serializers import TurfSerializer
@@ -52,7 +53,11 @@ def login(request):
 @csrf_exempt
 def turf(request):
     if request.method == 'POST':
-        serializer = TurfSerializer(data=request.POST, files=request.FILES)
+        parser = MultiPartParser()
+        data = request.POST.copy()
+        data.update(request.FILES)  # Combine request.POST and request.FILES
+
+        serializer = TurfSerializer(data=data)        
         if serializer.is_valid():
             serializer.save()
             return JsonResponse({"message": "Turf Data added successfully"}, safe=False)
