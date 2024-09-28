@@ -52,8 +52,7 @@ def login(request):
 @csrf_exempt
 def turf(request):
     if request.method == 'POST':
-        data = json.loads(request.body)
-        serializer = TurfSerializer(data=data)
+        serializer = TurfSerializer(data=request.POST, files=request.FILES)
         if serializer.is_valid():
             serializer.save()
             return JsonResponse({"message": "Turf Data added successfully"}, safe=False)
