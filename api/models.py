@@ -71,7 +71,11 @@ class TurfDetails(models.Model):
     owner_name = models.CharField(max_length=200)
     turf_contact_phone = models.CharField(max_length=10)
     turf_contact_email = models.EmailField()
-    image = models.ImageField(upload_to='turf_images/', default='turf_images/default.jpg')
+    image1 = models.ImageField(upload_to='turf_images/', default='turf_images/download_1.jpeg', blank=True, null=True)
+    image2 = models.ImageField(upload_to='turf_images/', default='turf_images/download_1.jpeg', blank=True, null=True)
+    image3 = models.ImageField(upload_to='turf_images/', default='turf_images/download_1.jpeg', blank=True, null=True)
+    image4 = models.ImageField(upload_to='turf_images/', default='turf_images/download_1.jpeg', blank=True, null=True)
+    image5 = models.ImageField(upload_to='turf_images/', default='turf_images/download_1.jpeg', blank=True, null=True)
 
     def __str__(self):
         return self.turf_name  # Updated __str__ method to use turf_name
