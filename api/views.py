@@ -82,6 +82,8 @@ def getturf(request, id=0):
             
 @csrf_exempt
 def getloc(request, lat=0, long=0):
+    lat = float(lat)
+    long = float(long)
     if request.method == "GET":
         if lat == 0 or long == 0:
             return JsonResponse({"message": "Invalid location provided."}, status=400)

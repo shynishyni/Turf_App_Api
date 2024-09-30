@@ -26,7 +26,7 @@ urlpatterns = [
     path('login/',views.login,name='login'),
     path('turf/',views.turf,name='turf'),
     path('getturf/<int:id>/',views.getturf,name='getturf'),
-    path('getloc/<float:lat>/<float:long>/',views.getloc,name='getloc')
+    path('getloc/<str:lat>/<str:long>/',views.getloc,name='getloc')
 ]
 if settings.DEBUG:
     urlpatterns += static(settings.MEDIA_URL, document_root=settings.MEDIA_ROOT)
