@@ -119,11 +119,11 @@ def getloc(request, lat=0, long=0):
                     "owner_name": turf.owner_name,
                     "turf_contact_phone": turf.turf_contact_phone,
                     "turf_contact_email": turf.turf_contact_email,
-                    "image1": turf.image.url if turf.image else None,  # Use image URL if available
-                    "image2": turf.image.url if turf.image else None,
-                    "image3": turf.image.url if turf.image else None,
-                    "image4": turf.image.url if turf.image else None,
-                    "image5": turf.image.url if turf.image else None                
+                    "image1": turf.image.url if turf.image1 else None,  # Use image URL if available
+                    "image2": turf.image.url if turf.image2 else None,
+                    "image3": turf.image.url if turf.image3 else None,
+                    "image4": turf.image.url if turf.image4 else None,
+                    "image5": turf.image.url if turf.image5 else None                
                 }
                 nearby_turfs.append(turf_data)
 
