@@ -64,14 +64,11 @@ def getturf(request, id=0):
             
 @csrf_exempt
 def getloc(request, lat=0, long=0):
-    if lat == "" or long == "":
-        # Redirect the request to the turf function if lat or long are empty
-        return turf(request)
-    lat = float(lat) if lat else 0
-    long = float(long) if long else 0
+    lat = float(lat) 
+    long = float(long) 
     if request.method == "GET":
         if lat == 0 or long == 0:
-            return turf(request)
+            return JsonResponse({"message": "Invalid request method"}, status=404)        
         turfs = TurfDetails.objects.all()
         nearby_turfs = []
 
