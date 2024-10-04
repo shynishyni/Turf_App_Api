@@ -48,24 +48,6 @@ def login(request):
     return JsonResponse({"error": "Invalid request method"}, status=405, safe=False)
 
 @csrf_exempt
-def turf(request):
-    if request.method == 'POST':
-        parser = MultiPartParser()
-        data = request.POST.copy()
-        data.update(request.FILES)  # Combine request.POST and request.FILES
-
-        serializer = TurfSerializer(data=data)        
-        if serializer.is_valid():
-            serializer.save()
-            return JsonResponse({"message": "Turf Data added successfully"}, safe=False)
-        else:
-            return JsonResponse(serializer.errors, safe=False)
-    if request.method == 'GET':
-        item= TurfDetails.objects.all()
-        serializer = TurfSerializer(item,many=True)
-        return JsonResponse(serializer.data,safe=False)
-
-@csrf_exempt
 def getturf(request, id=0):
     if request.method == "GET":
         if id == 0:
@@ -82,12 +64,14 @@ def getturf(request, id=0):
             
 @csrf_exempt
 def getloc(request, lat=0, long=0):
-    lat = float(lat)
-    long = float(long)
+    if lat == "" or long == "":
+        # Redirect the request to the turf function if lat or long are empty
+        return turf(request)
+    lat = float(lat) if lat else 0
+    long = float(long) if long else 0
     if request.method == "GET":
         if lat == 0 or long == 0:
-            return JsonResponse({"message": "Invalid location provided."}, status=400)
-
+            return turf(request)
         turfs = TurfDetails.objects.all()
         nearby_turfs = []
 
@@ -132,3 +116,21 @@ def getloc(request, lat=0, long=0):
             return JsonResponse(nearby_turfs, safe=False)
         else:
             return JsonResponse({"message": "No turfs found within 5 km."}, status=404)
+
+@csrf_exempt
+def turf(request):
+    if request.method == 'POST':
+        parser = MultiPartParser()
+        data = request.POST.copy()
+        data.update(request.FILES)  # Combine request.POST and request.FILES
+
+        serializer = TurfSerializer(data=data)        
+        if serializer.is_valid():
+            serializer.save()
+            return JsonResponse({"message": "Turf Data added successfully"}, safe=False)
+        else:
+            return JsonResponse(serializer.errors, safe=False)
+    if request.method == 'GET':
+        item= TurfDetails.objects.all()
+        serializer = TurfSerializer(item,many=True)
+        return JsonResponse(serializer.data,safe=False)
