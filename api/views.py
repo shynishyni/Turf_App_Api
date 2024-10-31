@@ -25,7 +25,10 @@ def user(request):
         item= UserDetailsTable.objects.all()
         serializer = UserSreializer(item,many=True)
         return JsonResponse(serializer.data,safe=False)
-
+@csrf_exempt
+def default(request):
+    if request.method == 'GET':
+        return JsonResponse({"message": "Turf Details"}, safe=False)
 @csrf_exempt
 def login(request):
     if request.method == 'POST':
