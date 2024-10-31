@@ -8,6 +8,7 @@ from .models import TurfDetails
 from django.contrib.auth.hashers import check_password
 from django.contrib.auth.hashers import make_password
 from geopy.distance import geodesic
+from django.shortcuts import render
 import json
 
 @csrf_exempt
@@ -28,7 +29,7 @@ def user(request):
 @csrf_exempt
 def default(request):
     if request.method == 'GET':
-        return JsonResponse({"message": "Turf Details"}, safe=False)
+          return render(request,'default.html')
 @csrf_exempt
 def login(request):
     if request.method == 'POST':
