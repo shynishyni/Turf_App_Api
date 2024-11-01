@@ -2,9 +2,11 @@ from django.views.decorators.csrf import csrf_exempt
 from rest_framework.parsers import MultiPartParser
 from .serializers import UserSreializer
 from .serializers import TurfSerializer
+from .serializers import TurfBookingDetailsSerializer
 from django.http.response import JsonResponse
 from .models import UserDetailsTable
 from .models import TurfDetails
+from .models import TurfBookingDetails
 from django.contrib.auth.hashers import check_password
 from django.contrib.auth.hashers import make_password
 from geopy.distance import geodesic
@@ -22,10 +24,10 @@ def user(request):
             return JsonResponse({"message": "User Data added successfully"}, safe=False)
         else:
             return JsonResponse(serializer.errors, safe=False)
-    if request.method == 'GET':
-        item= UserDetailsTable.objects.all()
-        serializer = UserSreializer(item,many=True)
-        return JsonResponse(serializer.data,safe=False)
+    # if request.method == 'GET':
+    #     item= UserDetailsTable.objects.all()
+    #     serializer = UserSreializer(item,many=True)
+    #     return JsonResponse(serializer.data,safe=False)
 @csrf_exempt
 def default(request):
     if request.method == 'GET':
