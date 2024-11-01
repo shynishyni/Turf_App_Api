@@ -1,6 +1,6 @@
 from django.views.decorators.csrf import csrf_exempt
 from rest_framework.parsers import MultiPartParser
-from .serializers import UserSreializer
+from .serializers import UserSerializer
 from .serializers import TurfSerializer
 from .serializers import TurfBookingDetailsSerializer
 from django.http.response import JsonResponse
@@ -18,16 +18,20 @@ def user(request):
     if request.method == 'POST':
         data = json.loads(request.body)
         data['password'] = make_password(data['password'])
-        serializer = UserSreializer(data=data)
+        serializer = UserSerializer(data=data)
         if serializer.is_valid():
             serializer.save()
-            return JsonResponse({"message": "User Data added successfully"}, safe=False)
+            return JsonResponse({"message": "User Data added successfully"},status=200)
         else:
-            return JsonResponse(serializer.errors, safe=False)
+            return JsonResponse(serializer.errors, safe=False, status=400)
+
+     return JsonResponse({"error": "Invalid request method"}, status=405)
+
     # if request.method == 'GET':
     #     item= UserDetailsTable.objects.all()
     #     serializer = UserSreializer(item,many=True)
     #     return JsonResponse(serializer.data,safe=False)
+
 @csrf_exempt
 def default(request):
     if request.method == 'GET':

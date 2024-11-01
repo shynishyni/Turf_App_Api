@@ -3,7 +3,7 @@ from .models import UserDetailsTable
 from .models import TurfDetails
 from .models import TurfBookingDetails
 
-class UserSreializer(serializers.ModelSerializer):
+class UserSerializer(serializers.ModelSerializer):
     class Meta:
         model = UserDetailsTable
         fields ='__all__'
