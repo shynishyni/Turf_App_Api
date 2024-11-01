@@ -87,7 +87,7 @@ class TurfDetails(models.Model):
 #         return f"Image for {self.turf.turf_name}"
 
 
-class TurfBookingDeatils(models.Model):
+class TurfBookingDetails(models.Model):
     user_id = models.CharField(max_length=200, unique=True, editable=False)
     turf_name = models.CharField(max_length=100)
     starting_time = models.TimeField( blank=False, null=False)
