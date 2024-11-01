@@ -19,13 +19,14 @@ def user(request):
         data = json.loads(request.body)
         data['password'] = make_password(data['password'])
         serializer = UserSerializer(data=data)
+
         if serializer.is_valid():
             serializer.save()
-            return JsonResponse({"message": "User Data added successfully"},status=200)
+            return JsonResponse({"message": "User Data added successfully"}, status=201)  # Changed to 201 for created
         else:
             return JsonResponse(serializer.errors, safe=False, status=400)
 
-     return JsonResponse({"error": "Invalid request method"}, status=405)
+    return JsonResponse({"error": "Invalid request method"}, status=405)
 
     # if request.method == 'GET':
     #     item= UserDetailsTable.objects.all()
