@@ -27,7 +27,7 @@ DEBUG = False
 
 ALLOWED_HOSTS = ['project1.onrender.com','project1-otd3.onrender.com']
 
-CORS_ALLOW_ALL_ORIGINS = True
+# CORS_ALLOW_ALL_ORIGINS = True
 
 # Application definition
 
