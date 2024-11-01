@@ -31,8 +31,6 @@ class UserDetailsTable(models.Model):
     
         super().save(*args, **kwargs)
 
-from django.db import models
-
 class TurfDetails(models.Model):
     TURF_TYPE_CHOICES = [
         ('indoor', 'Indoor'),
@@ -87,3 +85,17 @@ class TurfDetails(models.Model):
 
 #     def __str__(self):
 #         return f"Image for {self.turf.turf_name}"
+
+
+class TurfBookingDeatils(models.Model):
+    user_id = models.CharField(max_length=200, unique=True, editable=False)
+    turf_name = models.CharField(max_length=100)
+    starting_time = models.TimeField( blank=False, null=False)
+    ending_time = models.TimeField( blank=False, null=False)
+    date= models.DateField(blank=False, null=False)
+    total_ammount = models.DecimalField(max_digits=6, decimal_places=2)
+    created_at = models.DateTimeField(auto_now_add=True)
+    updated_at = models.DateTimeField(auto_now=True)
+
+    def __str__(self):
+        return self.name

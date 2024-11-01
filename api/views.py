@@ -6,7 +6,7 @@ from .serializers import TurfBookingDetailsSerializer
 from django.http.response import JsonResponse
 from .models import UserDetailsTable
 from .models import TurfDetails
-from .models import TurfBookingDetails
+from .models import TurfBookingDeatils
 from django.contrib.auth.hashers import check_password
 from django.contrib.auth.hashers import make_password
 from geopy.distance import geodesic
