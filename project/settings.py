@@ -73,6 +73,10 @@ TEMPLATES = [
     },
 ]
 
+CORS_ALLOWED_ORIGINS = [
+http://192.168.1.9:8081
+]
+
 WSGI_APPLICATION = 'project.wsgi.application'
 
 
