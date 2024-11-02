@@ -19,10 +19,10 @@ def user(request):
         data = json.loads(request.body)
         data['password'] = make_password(data['password'])
         serializer = UserSerializer(data=data)
-
+        
         if serializer.is_valid():
-            serializer.save()
-            return JsonResponse({"message": "User Data added successfully"}, status=201)  # Changed to 201 for created
+            user = serializer.save()
+            return JsonResponse({"message": "User Data added successfully", "user_id": user.user_id}, status=201)  # Changed to 201 for created
         else:
             return JsonResponse(serializer.errors, safe=False, status=400)
 
@@ -43,13 +43,14 @@ def login(request):
         data = json.loads(request.body)
         identifier = data.get('identifier')
         password = data.get('password')
-        print(identifier, password)
+        # u_id=data.get('user_id')
+        print(identifier, password )
         try:
             user = UserDetailsTable.objects.filter(email=identifier).first() or \
                    UserDetailsTable.objects.filter(phone=identifier).first()
             if user:   
                 if check_password(password, user.password):
-                    return JsonResponse({"message": "Login successful"}, safe=False)
+                    return JsonResponse({"message": "Login successful", "user_id": user.user_id}, safe=False)
                 else:         
                     return JsonResponse({"error": "Invalid credentials"}, status=401, safe=False)
             else:      

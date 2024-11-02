@@ -32,11 +32,11 @@ from django.conf.urls.static import static
 urlpatterns = [
     path('admin/', admin.site.urls),
     path('',views.default,name='default'),
-    path('user/',views.user,name='adduser'),
-    path('login/',views.login,name='login'),
-    path('turf/',views.turf,name='turf'),
-    path('getturf/<int:id>/',views.getturf,name='getturf'),
-    path('getloc/<str:lat>/<str:long>/',views.getloc,name='getloc')
+    path('user',views.user,name='adduser'),
+    path('login',views.login,name='login'),
+    path('turf',views.turf,name='turf'),
+    path('getturf/<int:id>',views.getturf,name='getturf'),
+    path('getloc/<str:lat>/<str:long>',views.getloc,name='getloc')
 ]
 if settings.DEBUG:
     urlpatterns += static(settings.MEDIA_URL, document_root=settings.MEDIA_ROOT)
