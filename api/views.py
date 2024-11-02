@@ -46,30 +46,36 @@ def login(request):
             identifier = data.get('identifier')
             password = data.get('password')
 
+            # Log the incoming data for debugging
+            print(f"Received identifier: {identifier}, password: {password}")
+
             # Check for missing fields
             if not identifier or not password:
                 return JsonResponse({"error": "Identifier and password are required"}, status=400)
 
-            print(identifier, password)
             user = UserDetailsTable.objects.filter(email=identifier).first() or \
                    UserDetailsTable.objects.filter(phone=identifier).first()
 
             if user:
+                # Log the user found
+                print(f"User found: {user.email if user.email else user.phone}")
+
                 if check_password(password, user.password):
                     return JsonResponse({"message": "Login successful", "user_id": user.user_id}, safe=False)
                 else:
+                    print("Invalid password provided")
                     return JsonResponse({"error": "Invalid credentials"}, status=401, safe=False)
             else:
+                print("No user found with the provided identifier")
                 return JsonResponse({"error": "User not found"}, status=404, safe=False)
 
         except json.JSONDecodeError:
             return JsonResponse({"error": "Invalid JSON format"}, status=400, safe=False)
-        except UserDetailsTable.DoesNotExist:
-            return JsonResponse({"error": "User does not exist"}, status=404, safe=False)
         except Exception as e:
             return JsonResponse({"error": f"An unexpected error occurred: {str(e)}"}, status=500, safe=False)
 
     return JsonResponse({"error": "Invalid request method"}, status=405, safe=False)
+
     
 @csrf_exempt
 def getturf(request, id=0):
