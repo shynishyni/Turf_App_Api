@@ -37,28 +37,40 @@ def user(request):
 def default(request):
     if request.method == 'GET':
           return render(request,'default.html')
+
 @csrf_exempt
 def login(request):
     if request.method == 'POST':
-        data = json.loads(request.body)
-        identifier = data.get('identifier')
-        password = data.get('password')
-        # u_id=data.get('user_id')
-        print(identifier, password )
         try:
+            data = json.loads(request.body)
+            identifier = data.get('identifier')
+            password = data.get('password')
+
+            # Check for missing fields
+            if not identifier or not password:
+                return JsonResponse({"error": "Identifier and password are required"}, status=400)
+
+            print(identifier, password)
             user = UserDetailsTable.objects.filter(email=identifier).first() or \
                    UserDetailsTable.objects.filter(phone=identifier).first()
-            if user:   
+
+            if user:
                 if check_password(password, user.password):
                     return JsonResponse({"message": "Login successful", "user_id": user.user_id}, safe=False)
-                else:         
+                else:
                     return JsonResponse({"error": "Invalid credentials"}, status=401, safe=False)
-            else:      
-                return JsonResponse({"error": "Invalid credentials"}, status=402, safe=False) 
-        except Exception as e:        
-            return JsonResponse({"error": str(e)}, status=500, safe=False)  
-    return JsonResponse({"error": "Invalid request method"}, status=405, safe=False)
+            else:
+                return JsonResponse({"error": "User not found"}, status=404, safe=False)
 
+        except json.JSONDecodeError:
+            return JsonResponse({"error": "Invalid JSON format"}, status=400, safe=False)
+        except UserDetailsTable.DoesNotExist:
+            return JsonResponse({"error": "User does not exist"}, status=404, safe=False)
+        except Exception as e:
+            return JsonResponse({"error": f"An unexpected error occurred: {str(e)}"}, status=500, safe=False)
+
+    return JsonResponse({"error": "Invalid request method"}, status=405, safe=False)
+    
 @csrf_exempt
 def getturf(request, id=0):
     if request.method == "GET":
