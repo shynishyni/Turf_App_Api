@@ -62,7 +62,7 @@ class TurfDetails(models.Model):
     status = models.IntegerField(choices=Status.choices, default=Status.PENDING)    
     # opening_time = models.TimeField( blank=True, null=True)
     # closing_time = models.TimeField( blank=True, null=True)
-    slotes=models.CharField(max_length=250,null=True)
+    slotes=models.JSONField(default=list, null=True)
     closed_days = models.CharField(max_length=50, help_text="Days turf is closed, e.g., Sunday") 
     hourly_rate = models.DecimalField(max_digits=6, decimal_places=2)
     peak_hour_rate = models.DecimalField(max_digits=6, decimal_places=2, blank=True, null=True)

@@ -12,6 +12,8 @@ from django.contrib.auth.hashers import make_password
 from geopy.distance import geodesic
 from django.shortcuts import render
 import json
+from django.core.files.base import ContentFile
+import base64
 
 @csrf_exempt
 def user(request):
@@ -147,16 +149,29 @@ def getloc(request, lat=0, long=0):
 @csrf_exempt
 def turf(request):
     if request.method == 'POST':
-        parser = MultiPartParser()
-        data = request.POST.copy()
-        data.update(request.FILES)  # Combine request.POST and request.FILES
+        try:
+            data = json.loads(request.body)
+        except json.JSONDecodeError:
+            return JsonResponse({"error": "Invalid JSON"}, status=400)
 
-        serializer = TurfSerializer(data=data)        
+        # Handle file data if present
+        images_data = data.pop('images', [])
+        files = []
+        for image_data in images_data:
+            format, imgstr = image_data['data'].split(';base64,')
+            ext = format.split('/')[-1]
+            file = ContentFile(base64.b64decode(imgstr), name=f"{image_data['name']}.{ext}")
+            files.append(file)
+
+        serializer = TurfSerializer(data=data)
         if serializer.is_valid():
-            serializer.save()
-            return JsonResponse({"message": "Turf Data added successfully"}, safe=False)
+            turf_instance = serializer.save()
+            # Save files if any
+            for file in files:
+                turf_instance.images.create(image=file)
+            return JsonResponse({"message": "Turf Data added successfully"}, status=201)
         else:
-            return JsonResponse(serializer.errors, safe=False)
+            return JsonResponse(serializer.errors, status=400)
     if request.method == 'GET':
         item= TurfDetails.objects.all()
         serializer = TurfSerializer(item,many=True)
