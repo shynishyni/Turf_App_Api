@@ -44,6 +44,8 @@ INSTALLED_APPS = [
 ]
 
 MIDDLEWARE = [
+    'corsheaders.middleware.CorsMiddleware',
+    'django.middleware.common.CommonMiddleware',
     'django.middleware.security.SecurityMiddleware',
     'whitenoise.middleware.WhiteNoiseMiddleware',
     'django.contrib.sessions.middleware.SessionMiddleware',
@@ -73,7 +75,7 @@ TEMPLATES = [
     },
 ]
 
-CORS_ALLOWED_ORIGINS = ['http://192.168.1.9:8081']
+CORS_ALLOWED_ORIGINS = ['http://192.168.1.9:8081' "http://localhost:3000"]
 
 WSGI_APPLICATION = 'project.wsgi.application'
 
@@ -151,3 +153,6 @@ DEFAULT_AUTO_FIELD = 'django.db.models.BigAutoField'
 
 MEDIA_URL = '/media/'
 MEDIA_ROOT = BASE_DIR / 'media'
+
+CORS_ALLOW_ALL_ORIGINS = True
+
