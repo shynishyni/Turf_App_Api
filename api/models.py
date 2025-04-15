@@ -2,14 +2,6 @@ from django.db import models
 from django.utils import timezone
 from django.utils.timezone import now
 
-# existing = TurfDetails.objects.filter(turf_id__isnull=True)
-# year = str(now().year)[-2:]
-# prefix = f"{year}T"
-
-# for i, obj in enumerate(existing, start=1):
-#     obj.turf_id = f"{prefix}{i:04d}"
-#     obj.save()
-
 
 class UserDetailsTable(models.Model):
    
@@ -91,15 +83,15 @@ class TurfDetails(models.Model):
         return self.turf_name  # Updated __str__ method to use turf_name
 
     def save(self, *args, **kwargs):
-        if not self.turf_id:
+        if not self.custom_id:
             year = str(now().year)[-2:]  # gets last two digits of the year
             prefix = f"{year}T"
 
             # Count existing objects with current year's prefix
-            count = TurfDetails.objects.filter(turf_id__startswith=prefix).count() + 1
+            count = TurfDetails.objects.filter(custom_id__startswith=prefix).count() + 1
             serial = f"{count:04d}"  # pad with zeroes (0001, 0002, ...)
 
-            self.turf_id = f"{prefix}{serial}"
+            self.custom_id = f"{prefix}{serial}"
 
         super().save(*args, **kwargs)
 # class TurfImage(models.Model):
@@ -121,4 +113,4 @@ class TurfBookingDetails(models.Model):
     updated_at = models.DateTimeField(auto_now=True)
 
     def __str__(self):
-        return f"{self.turf_name} booking on {self.date}"
+        return self.name
