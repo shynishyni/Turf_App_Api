@@ -75,7 +75,7 @@ TEMPLATES = [
     },
 ]
 
-CORS_ALLOWED_ORIGINS = ['http://192.168.1.9:8081' "http://localhost:3000"]
+CORS_ALLOWED_ORIGINS = ['http://192.168.1.9:8081' ,"http://localhost:3000"]
 
 WSGI_APPLICATION = 'project.wsgi.application'
 
