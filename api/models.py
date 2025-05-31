@@ -1,5 +1,7 @@
 from django.db import models
 from django.utils import timezone
+from django.utils.timezone import now
+
 
 class UserDetailsTable(models.Model):
    
@@ -47,7 +49,7 @@ class TurfDetails(models.Model):
         VERIFIED = 1, 'Verified'
         BLOCKED = 2, 'Blocked'
         PENDING = 3, 'Pending'
-
+    turf_id=models.CharField(max_length=10, unique=True, null=True, blank=True)
     turf_name = models.CharField(max_length=100)
     turf_address = models.TextField()
     turf_city = models.CharField(max_length=50)
@@ -60,8 +62,9 @@ class TurfDetails(models.Model):
     size = models.CharField(max_length=20, help_text="E.g., 5-a-side, 7-a-side, 11-a-side")
     capacity = models.PositiveIntegerField(help_text="Maximum players allowed")
     status = models.IntegerField(choices=Status.choices, default=Status.PENDING)    
-    opening_time = models.TimeField( blank=True, null=True)
-    closing_time = models.TimeField( blank=True, null=True)
+    # opening_time = models.TimeField( blank=True, null=True)
+    # closing_time = models.TimeField( blank=True, null=True)
+    slotes=models.JSONField(default=list, null=True)
     closed_days = models.CharField(max_length=50, help_text="Days turf is closed, e.g., Sunday") 
     hourly_rate = models.DecimalField(max_digits=6, decimal_places=2)
     peak_hour_rate = models.DecimalField(max_digits=6, decimal_places=2, blank=True, null=True)
@@ -79,6 +82,18 @@ class TurfDetails(models.Model):
     def __str__(self):
         return self.turf_name  # Updated __str__ method to use turf_name
 
+    def save(self, *args, **kwargs):
+        if not self.custom_id:
+            year = str(now().year)[-2:]  # gets last two digits of the year
+            prefix = f"{year}T"
+
+            # Count existing objects with current year's prefix
+            count = TurfDetails.objects.filter(custom_id__startswith=prefix).count() + 1
+            serial = f"{count:04d}"  # pad with zeroes (0001, 0002, ...)
+
+            self.custom_id = f"{prefix}{serial}"
+
+        super().save(*args, **kwargs)
 # class TurfImage(models.Model):
 #     turf = models.ForeignKey(TurfDetails, related_name='images', on_delete=models.CASCADE)
 #     image = models.ImageField(upload_to='turf_images/')
