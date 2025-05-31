@@ -79,6 +79,29 @@ Method: GET
 
 Description: Retrieves turfs based on latitude and longitude.
 
+# 🧑‍💻 How to Use
+Clone the repository:
+
+  git clone <repo-url>
+  cd <repo-directory>
+
+Install dependencies:
+
+  npm install
+
+or for Django:
+
+  pip install -r requirements.txt
+
+Run the server:
+
+  npm start
+
+or for Django:
+
+  python manage.py runserver
+
+
 # Turf Model Fields
 | Field Name           | Type    | Description                                            |
 | -------------------- | ------- | ------------------------------------------------------ |
